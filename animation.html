@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Cercles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+        }
+
+        .container {
+            width: 718px;
+            height: 410px;
+            position: relative;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        /* Groupe gauche (cercle + homme) */
+        .group-left {
+            position: absolute;
+            width: 411px;
+            height: 411px;
+            top: 50%;
+            transform: translateY(-50%);
+            left: -411px;
+            animation: slideFromLeft 2s ease-out forwards;
+        }
+
+        /* Groupe droite (cercle + homme) */
+        .group-right {
+            position: absolute;
+            width: 411px;
+            height: 415px;
+            top: 50%;
+            transform: translateY(-50%);
+            right: -411px;
+            animation: slideFromRight 2s ease-out forwards;
+        }
+
+        /* Cercles - fond (z-index: 1) */
+        .circle {
+            position: absolute;
+            width: 411px;
+            height: 411px;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Hommes - dessus (z-index: 3) */
+        .homme {
+            position: absolute;
+            width: 411px;
+            height: 411px;
+            top: 0;
+            left: 0;
+            z-index: 3;
+        }
+
+        .group-right .homme {
+            height: 415px;
+        }
+
+        /* Zone de recouvrement - milieu (z-index: 2) */
+        .recouvrement {
+            position: absolute;
+            width: 102px;
+            height: 270px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 2;
+            opacity: 0;
+            animation:
+                    appear 0.3s ease-out 1.8s forwards,
+                    heartbeat 1s ease-in-out 2.1s infinite;
+        }
+
+        @keyframes slideFromLeft {
+            0% {
+                left: -411px;
+            }
+            100% {
+                left: 0px;
+            }
+        }
+
+        @keyframes slideFromRight {
+            0% {
+                right: -411px;
+            }
+            100% {
+                right: 0px;
+            }
+        }
+
+        @keyframes appear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            15% {
+                transform: translate(-50%, -50%) scale(1.12);
+            }
+            30% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            45% {
+                transform: translate(-50%, -50%) scale(1.08);
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Bouton pour rejouer */
+        .replay-btn {
+            margin-top: 30px;
+            padding: 12px 24px;
+            font-size: 16px;
+            background: #f97316;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .replay-btn:hover {
+            background: #ea580c;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="animation-container">
+    <!-- Groupe gauche -->
+    <div class="group-left">
+        <img src="images/cercle-gauche.png" alt="" class="circle">
+        <img src="images/homme-gauche.png" alt="" class="homme">
+    </div>
+
+    <!-- Zone de recouvrement (entre cercles et hommes visuellement) -->
+    <img src="images/recouvrement.png" alt="" class="recouvrement">
+
+    <!-- Groupe droite -->
+    <div class="group-right">
+        <img src="images/cercle-droit.png" alt="" class="circle">
+        <img src="images/homme-droite.png" alt="" class="homme">
+    </div>
+</div>
+
+
+<script>
+    // Durée totale avant replay :
+    // 2s (slide) + 5s (pulsation) = 7 secondes
+    const DUREE_TOTALE = 7000;
+
+    function replayAnimation() {
+        const container = document.getElementById('animation-container');
+        const html = container.innerHTML;
+        container.innerHTML = '';
+        // Force reflow pour redémarrer les animations
+        void container.offsetWidth;
+        container.innerHTML = html;
+
+        // Relancer automatiquement après la durée définie
+        setTimeout(replayAnimation, DUREE_TOTALE);
+    }
+
+    // Lancer le cycle automatique au chargement
+    setTimeout(replayAnimation, DUREE_TOTALE);
+</script>
+</body>
+</html>
