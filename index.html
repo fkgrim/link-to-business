@@ -90,6 +90,83 @@
         .gradient-bg {
             background: linear-gradient(135deg, #1d4362 0%, #130C2A 100%);
         }
+
+        /* Animation cercles */
+        .animation-container {
+            width: 100%;
+            max-width: 718px;
+            aspect-ratio: 718 / 410;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .animation-group-left {
+            position: absolute;
+            width: 57.24%;
+            height: 100%;
+            top: 0;
+            left: -57.24%;
+            animation: animSlideFromLeft 2s ease-out forwards;
+        }
+
+        .animation-group-right {
+            position: absolute;
+            width: 57.24%;
+            height: 101.22%;
+            top: -0.6%;
+            right: -57.24%;
+            animation: animSlideFromRight 2s ease-out forwards;
+        }
+
+        .animation-circle,
+        .animation-homme {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .animation-circle { z-index: 1; }
+        .animation-homme { z-index: 3; }
+
+        .animation-recouvrement {
+            position: absolute;
+            width: 14.2%;
+            height: 65.85%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 2;
+            opacity: 0;
+            animation:
+                    animAppear 0.3s ease-out 1.8s forwards,
+                    animHeartbeat 1s ease-in-out 2.1s infinite;
+        }
+
+        @keyframes animSlideFromLeft {
+            0% { left: -57.24%; }
+            100% { left: 0; }
+        }
+
+        @keyframes animSlideFromRight {
+            0% { right: -57.24%; }
+            100% { right: 0; }
+        }
+
+        @keyframes animAppear {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes animHeartbeat {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            15% { transform: translate(-50%, -50%) scale(1.12); }
+            30% { transform: translate(-50%, -50%) scale(1); }
+            45% { transform: translate(-50%, -50%) scale(1.08); }
+            60% { transform: translate(-50%, -50%) scale(1); }
+        }
     </style>
 </head>
 <body class="font-sans text-gray-800 overflow-x-hidden">
@@ -168,7 +245,17 @@
 
             <!-- Colonne droite - Image -->
             <div data-aos="fade-left" data-aos-duration="1000" data-aos-delay="400">
-                <img src="images/pexels-mikhail-nilov-8431077.jpg" alt="Expertise Link to Business" loading="lazy" class="rounded-2xl shadow-2xl w-full">
+                <div class="animation-container rounded-2xl shadow-2xl" id="animation-container">
+                    <div class="animation-group-left">
+                        <img src="images/cercle-gauche.png" alt="" class="animation-circle">
+                        <img src="images/homme-gauche.png" alt="" class="animation-homme">
+                    </div>
+                    <img src="images/recouvrement.png" alt="" class="animation-recouvrement">
+                    <div class="animation-group-right">
+                        <img src="images/cercle-droit.png" alt="" class="animation-circle">
+                        <img src="images/homme-droite.png" alt="" class="animation-homme">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -639,6 +726,24 @@
             }
         });
     });
+
+    // Animation cercles - Replay automatique
+    (function() {
+        const DUREE_TOTALE = 7000; // 2s slide + 5s pulsation
+
+        function replayAnimation() {
+            const container = document.getElementById('animation-container');
+            if (container) {
+                const html = container.innerHTML;
+                container.innerHTML = '';
+                void container.offsetWidth; // Force reflow
+                container.innerHTML = html;
+                setTimeout(replayAnimation, DUREE_TOTALE);
+            }
+        }
+
+        setTimeout(replayAnimation, DUREE_TOTALE);
+    })();
 </script>
 <script type="application/ld+json">
     {
